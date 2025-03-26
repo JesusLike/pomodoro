@@ -1,0 +1,24 @@
+version: '1'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    shm_size: 128mb
+    env_file: ".env"
+    environment:
+      - POSTGRES_USER=$DB_USERNAME
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=$DB_NAME
+    ports: 
+      - "5432:5432"
+    volumes:
+      - pg_pomodoro:/var/lib/postgresql/data
+
+  cache:
+    image: redis:8.0-M04-alpine
+    ports:
+      - "6379:6379"
+    restart: always
+volumes:
+  pg_pomodoro:
+
