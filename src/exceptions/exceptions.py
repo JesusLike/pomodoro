@@ -4,5 +4,11 @@ class DbException(Exception):
 class ExternalException(Exception):
     pass
 
-class UserNameAlreadyExists(Exception):
+class UserAlreadyExists(Exception):
+    pass
+
+class UserNotFound(Exception):
+    pass
+
+class UserIncorrectPassword(Exception):
     pass
