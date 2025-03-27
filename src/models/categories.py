@@ -24,7 +24,7 @@ class DbCategory(DbBase):
     Category model for storage 
     '''
     __tablename__ = 'Categories'
-    
+
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     description: Mapped[Optional[str]]

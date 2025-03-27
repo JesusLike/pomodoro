@@ -3,3 +3,6 @@ class DbException(Exception):
 
 class ExternalException(Exception):
     pass
+
+class UserNameAlreadyExists(Exception):
+    pass
