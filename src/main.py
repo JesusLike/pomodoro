@@ -9,8 +9,8 @@ from fastapi.responses import JSONResponse
 from src.handlers import routers
 from src.exceptions import ExternalException
 
-logging.basicConfig(filename="application.log", level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logging.info("Pomodoro Core Server started")
+# logging.basicConfig(filename="application.log", level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# logging.info("Pomodoro Core Server started")
 
 app = FastAPI()
 
