@@ -6,7 +6,7 @@ from typing import Annotated
 from fastapi import APIRouter, Response, Request, Depends
 from src.models.categories import InputCategory, Category, PatchCategory
 from src.controllers.categories import CategoriesController
-from src.dependencies import get_categories_controller
+from src.dependencies.categories import get_categories_controller
 from src.exceptions import DbException, ExternalException
 
 router = APIRouter(prefix="/categories", tags=["categories"])

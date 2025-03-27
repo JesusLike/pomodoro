@@ -16,10 +16,10 @@ def get_url():
 
 url = get_url()
 engine = create_engine(url)
-Session = sessionmaker(engine)
+session_maker = sessionmaker(engine)
 
 async def get_session():
-    session = Session()
+    session = session_maker()
     try:
         yield session
     finally:

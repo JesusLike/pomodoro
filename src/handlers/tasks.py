@@ -6,7 +6,7 @@ from typing import Annotated
 from fastapi import APIRouter, Response, Request, Depends
 from src.models.tasks import InputTask, Task, PatchTask
 from src.controllers.tasks import TasksController
-from src.dependencies import get_tasks_controller
+from src.dependencies.tasks import get_tasks_controller
 from src.exceptions import DbException, ExternalException
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])

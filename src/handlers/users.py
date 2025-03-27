@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 
 from src.models.users import UserLoginCredentials
 from src.controllers.users import UsersController
-from src.dependencies import get_users_controller
+from src.dependencies.users import get_users_controller
 
 router = APIRouter(prefix="/users", tags=["users"])
 
