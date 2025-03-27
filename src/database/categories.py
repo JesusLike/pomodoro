@@ -10,7 +10,7 @@ from src.exceptions import DbException
 @dataclass
 class CategoriesDatabaseRepository():
     session: Session
-    
+
     def get_categories(self) -> list[DbCategory]:
         return self.__select_all()
 
@@ -28,7 +28,7 @@ class CategoriesDatabaseRepository():
         if not (db_category := self.__select_by_id(id)):
             return None
         for name, value in props.items():
-            db_category.__setattr__(name, value)
+            setattr(db_category, name, value)
         self.session.commit()
         return db_category
 
@@ -38,8 +38,8 @@ class CategoriesDatabaseRepository():
         self.session.delete(db_category)
         try:
             self.session.commit()
-        except IntegrityError:
-            raise DbException("Cannot delete Category if it is referenced by any Task")
+        except IntegrityError as e:
+            raise DbException("Cannot delete Category if it is referenced by any Task") from e
         return db_category
 
 # --- Query creation methods ---

@@ -28,7 +28,7 @@ def create_task(tasks: TasksControllerDep, response: Response, request: Request,
     try:
         created = tasks.create_task(task)
     except DbException as e:
-        raise ExternalException(e.args[0])
+        raise ExternalException(e.args[0]) from e
     response.headers["Location"] = request.url.path + f"/{created.id}"
     return created
 

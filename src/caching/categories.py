@@ -18,6 +18,7 @@ class CategoriesCacheRepository:
         categories: list[Category] = []
         for hash_name in hash_list:
             categories.append(Category.model_validate(self.cache.hgetall(hash_name)))
+        return categories
 
     def set_categories(self, categories: list[Category]) -> None:
         for category in categories:

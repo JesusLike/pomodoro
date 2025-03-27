@@ -64,7 +64,7 @@ def delete_category(categories: CategoriesControllerDep, response: Response, cat
     try:
         deleted = categories.delete_category(category_id)
     except DbException as e:
-        raise ExternalException(e.args[0])
+        raise ExternalException(e.args[0]) from e
     if not deleted:
         response.status_code = 404
     return deleted

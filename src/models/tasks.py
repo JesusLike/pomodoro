@@ -39,11 +39,11 @@ class DbTask(DbBase):
     Task model for storage
     '''
     __tablename__ = 'Tasks'
-    
+
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[Optional[str]]
     description: Mapped[Optional[str]]
     pomodoro_count: Mapped[int]
     category_id: Mapped[int] = mapped_column(ForeignKey("Categories.id"))
-    
+
     category: Mapped[DbCategory] = relationship("DbCategory", foreign_keys=[category_id])

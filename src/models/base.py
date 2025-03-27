@@ -1,4 +1,4 @@
-from sqlalchemy.orm import DeclarativeBase, declared_attr
+from sqlalchemy.orm import DeclarativeBase
 from pydantic import BaseModel, ConfigDict
 
 class DbBase(DeclarativeBase):
