@@ -1,11 +1,11 @@
 
 from dataclasses import dataclass
 
-import bcrypt
-
 from src.database.users import UsersRepository
 from src.exceptions import UserNameAlreadyExists
 from src.models.users import UserLoginCredentials
+
+from src.dependencies.security import hash_password
 
 @dataclass
 class UsersController():
@@ -17,7 +17,7 @@ class UsersController():
         if self.users_repository.get_user(username):
             raise UserNameAlreadyExists()
 
-        hashed_password, salt = self.__hash_passowrd(credentials.password)
+        hashed_password, salt = hash_password(credentials.password)
 
         if not self.users_repository.create_user({
             "username": username,
@@ -27,9 +27,3 @@ class UsersController():
             return None
 
         return credentials
-
-    @staticmethod
-    def __hash_passowrd(password: str) -> tuple[bytes, bytes]:
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password.encode(), salt)
-        return (hashed_password, salt)
