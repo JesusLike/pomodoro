@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from src.caching.core import get_cache
 from src.caching.tasks import TasksCacheRepository
+from src.controllers.tasks import TasksController
 from src.database.core import get_session
 from src.database.tasks import TasksDatabaseRepository
 from src.settings import Settings, get_settings
