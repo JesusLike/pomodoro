@@ -12,3 +12,6 @@ class UserNotFound(Exception):
 
 class UserIncorrectPassword(Exception):
     pass
+
+class UserInvalidToken(Exception):
+    pass

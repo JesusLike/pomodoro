@@ -5,7 +5,7 @@ from src.database.users import UsersRepository
 from src.exceptions import UserAlreadyExists
 from src.models.users import UserLoginCredentials
 
-from src.dependencies.security import hash_password
+from src.dependencies.security import hash_secret
 
 @dataclass
 class UsersController():
@@ -17,7 +17,7 @@ class UsersController():
         if self.users_repository.get_user(username):
             raise UserAlreadyExists()
 
-        hashed_password, salt = hash_password(credentials.password)
+        hashed_password, salt = hash_secret(credentials.password)
 
         if not self.users_repository.create_user({
             "username": username,
