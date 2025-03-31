@@ -11,48 +11,37 @@ from src.exceptions import DbException
 class TasksDatabaseRepository():
     session: Session
 
-    def get_tasks(self) -> list[DbTask]:
-        return self.__select_all()
+    def get_tasks_by_user_id(self, user_id: int) -> list[DbTask]:
+        query = select(DbTask).where(DbTask.user_id == user_id)
+        return self.session.execute(query).scalars().all()
 
-    def create_task(self, task: dict[str, any]) -> DbTask:
-        db_task = self.__create(task)
+    def create_task(self, props: dict[str, any]) -> DbTask:
+        db_task = DbTask(**props)
+        self.session.add(db_task)
         try:
             self.session.commit()
         except IntegrityError as e:
             raise DbException("Cannot create Task with unexisting Category") from e
         return db_task
 
-    def get_task(self, id: int) -> DbTask | None:
-        if not (db_task := self.__select_by_id(id)):
-            return None
-        return db_task
+    def get_task_with_user_id(self, id: int, user_id: int) -> DbTask | None:
+        print(user_id)
+        query = select(DbTask).where(DbTask.id == id).where(DbTask.user_id == user_id)
+        return self.session.execute(query).scalar_one_or_none()
 
-    def update_task(self, id: int, props: dict[str, any]) -> DbTask | None:
-        if not (db_task := self.__select_by_id(id)):
+    def update_task_with_user_id(self, id: int, user_id: int, props: dict[str, any]) -> DbTask | None:
+        query = select(DbTask).where(DbTask.id == id).where(DbTask.user_id == user_id)
+        if not (db_task := self.session.execute(query).scalar_one_or_none()):
             return None
         for name, value in props.items():
             setattr(db_task, name, value)
         self.session.commit()
         return db_task
 
-    def delete_task(self, id: int) -> DbTask | None:
-        if not (db_task := self.__select_by_id(id)):
+    def delete_task_with_user_id(self, id: int, user_id: int) -> DbTask | None:
+        query = select(DbTask).where(DbTask.id == id).where(DbTask.user_id == user_id)
+        if not (db_task := self.session.execute(query).scalar_one_or_none()):
             return None
         self.session.delete(db_task)
         self.session.commit()
         return db_task
-
-# --- Query creation methods ---
-
-    def __create(self, values: dict[str, any]) -> DbTask:
-        db_task = DbTask(**values)
-        self.session.add(db_task)
-        return db_task
-
-    def __select_all(self) -> list[DbTask]:
-        query = select(DbTask)
-        return self.session.execute(query).scalars().all()
-
-    def __select_by_id(self, id: int) -> DbTask | None:
-        query = select(DbTask).where(DbTask.id == id)
-        return self.session.execute(query).scalar_one_or_none()
