@@ -8,6 +8,6 @@ def __setup_exceptions(app: FastAPI):
             status_code=exception.status_code,
             detail=exception.message
         )
-        
+
 def setup_app(app: FastAPI):
     __setup_exceptions(app)
