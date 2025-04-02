@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from src.models.categories import Category, PatchCategory, InputCategory
 from src.caching.categories import CategoriesCacheRepository
+from src.exceptions.data import CategoryNotFoundError
 from src.database.categories import CategoriesDatabaseRepository
 
 @dataclass
@@ -16,11 +17,11 @@ class CategoriesController:
         self.cache_repository.set_categories(categories)
         return categories
 
-    def get_category(self, id: int) -> Category | None:
+    def get_category(self, id: int) -> Category:
         if cached := self.cache_repository.get_category(id):
             return cached
         if not (db_category := self.db_repository.get_category(id)):
-            return None
+            raise CategoryNotFoundError()
         return Category.model_validate(db_category)
 
     def create_category(self, category: InputCategory) -> Category:
@@ -28,20 +29,20 @@ class CategoriesController:
         self.cache_repository.invalidate()
         return Category.model_validate(db_category)
 
-    def update_category(self, id: int, category: InputCategory) -> Category | None:
+    def update_category(self, id: int, category: InputCategory) -> Category:
         if not (db_category := self.db_repository.update_category(id, category.model_dump())):
-            return None
+            raise CategoryNotFoundError()
         self.cache_repository.invalidate()
         return Category.model_validate(db_category)
 
-    def patch_category(self, id: int, props: PatchCategory) -> Category | None:
+    def patch_category(self, id: int, props: PatchCategory) -> Category:
         if not (db_category := self.db_repository.update_category(id, props.model_dump(exclude_none=True))):
-            return None
+            raise CategoryNotFoundError()
         self.cache_repository.invalidate()
         return Category.model_validate(db_category)
 
-    def delete_category(self, id: int) -> Category | None:
+    def delete_category(self, id: int) -> Category:
         if not (db_category := self.db_repository.delete_category(id)):
-            return None
+            raise CategoryNotFoundError()
         self.cache_repository.invalidate()
         return Category.model_validate(db_category)

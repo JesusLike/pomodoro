@@ -17,9 +17,3 @@ class TokensRepository():
         self.session.add(db_token)
         self.session.commit()
         return db_token
-
-# --- Query creation methods
-
-    def __select_by_id(self, id: int) -> DbAccessToken | None:
-        query = select(DbAccessToken).where(DbAccessToken.id == id)
-        return self.session.execute(query).scalar_one_or_none()

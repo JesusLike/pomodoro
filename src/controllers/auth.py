@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from src.database.users import UsersRepository
 from src.database.tokens import TokensRepository
 from src.dependencies.security import hash_secret, generate_jwt_token
-from src.exceptions.exceptions import UserNotFound, UserIncorrectPassword, UserInvalidToken
+from src.exceptions.auth import UserNotFoundError, UserIncorrectPasswordError, UserTokenNotFoundError
 from src.models.users import UserLoginCredentials
 from src.models.auth import AccessToken
 from src.settings import Settings
@@ -16,10 +16,10 @@ class AuthController:
     
     def login_with_credentials(self, credentials: UserLoginCredentials) -> AccessToken:
         if not (db_user := self.users_repository.get_user(credentials.username)):
-            raise UserNotFound()
+            raise UserNotFoundError()
         hashed_password = hash_secret(credentials.password, db_user.salt)[0]
         if hashed_password != db_user.hashed_password:
-            raise UserIncorrectPassword()
+            raise UserIncorrectPasswordError()
         return self.create_jwt_token(db_user.id)
     
     def create_jwt_token(self, user_id: int) -> AccessToken:
@@ -38,4 +38,4 @@ class AuthController:
             hash = hash_secret(token, db_token.salt)[0]
             if hash == db_token.hashed_token:
                 return True
-        raise UserInvalidToken()
+        raise UserTokenNotFoundError()
