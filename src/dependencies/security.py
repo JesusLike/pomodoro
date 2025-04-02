@@ -1,11 +1,9 @@
 from datetime import datetime, timezone, timedelta
-from typing import Annotated
 import bcrypt
-from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import jwt
+from jose import jwt, ExpiredSignatureError, JWTError
 
-from src.settings import Settings, get_settings
+from src.exceptions.auth import UserTokenExpiredError, UserInvalidTokenError
+from src.settings import Settings
 
 def hash_secret(secret: str, salt: str | None = None) -> tuple[str, str]:
     if not salt:
@@ -31,4 +29,9 @@ def generate_jwt_token(user_id: int, settings: Settings) -> str:
     return jwt.encode(claims, settings.token_encoding_key, algorithm=settings.token_encoding_algorithm)
 
 def decode_jwt_token(token: str, settings: Settings) -> dict[str, str]:
-    return jwt.decode(token, settings.token_encoding_key, algorithms=[settings.token_encoding_algorithm])
+    try:
+        return jwt.decode(token, settings.token_encoding_key, algorithms=[settings.token_encoding_algorithm])
+    except ExpiredSignatureError as e:
+        raise UserTokenExpiredError() from e
+    except JWTError as e:
+        raise UserInvalidTokenError() from e

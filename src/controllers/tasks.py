@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from src.models.tasks import Task, PatchTask, InputTask
 from src.caching.tasks import TasksCacheRepository
+from src.exceptions.data import TaskNotFoundError
 from src.database.tasks import TasksDatabaseRepository
 
 @dataclass
@@ -17,11 +18,11 @@ class TasksController:
         self.cache_repository.set_tasks_with_user_id(tasks, self.user_id)
         return tasks
 
-    def get_task(self, id: int) -> Task | None:
+    def get_task(self, id: int) -> Task:
         if cached := self.cache_repository.get_task_with_user_id(id, self.user_id):
             return cached
         if not (db_task := self.db_repository.get_task_with_user_id(id, self.user_id)):
-            return None
+            raise TaskNotFoundError()
         return Task.model_validate(db_task)
 
     def create_task(self, task: InputTask) -> Task:
@@ -31,20 +32,20 @@ class TasksController:
         self.cache_repository.invalidate_with_user_id(self.user_id)
         return Task.model_validate(db_task)
 
-    def update_task(self, id: int, task: InputTask) -> Task | None:
+    def update_task(self, id: int, task: InputTask) -> Task:
         if not (db_task := self.db_repository.update_task_with_user_id(id, self.user_id, task.model_dump())):
-            return None
+            raise TaskNotFoundError()
         self.cache_repository.invalidate_with_user_id(self.user_id)
         return Task.model_validate(db_task)
 
-    def patch_task(self, id: int, props: PatchTask) -> Task | None:
+    def patch_task(self, id: int, props: PatchTask) -> Task:
         if not (db_task := self.db_repository.update_task_with_user_id(id, self.user_id, props.model_dump(exclude_none=True))):
-            return None
+            raise TaskNotFoundError()
         self.cache_repository.invalidate_with_user_id(self.user_id)
         return Task.model_validate(db_task)
 
-    def delete_task(self, id: int) -> Task | None:
+    def delete_task(self, id: int) -> Task:
         if not (db_task := self.db_repository.delete_task_with_user_id(id, self.user_id)):
-            return None
+            raise TaskNotFoundError()
         self.cache_repository.invalidate_with_user_id(self.user_id)
         return Task.model_validate(db_task)

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
 from src.models.categories import DbCategory
-from src.exceptions import DbException
+from src.exceptions.data import CategoryTaskBoundError
 
 @dataclass
 class CategoriesDatabaseRepository():
@@ -39,7 +39,7 @@ class CategoriesDatabaseRepository():
         try:
             self.session.commit()
         except IntegrityError as e:
-            raise DbException("Cannot delete Category if it is referenced by any Task") from e
+            raise CategoryTaskBoundError() from e
         return db_category
 
 # --- Query creation methods ---
