@@ -17,12 +17,9 @@ def hash_secret(secret: str, salt: str | None = None) -> tuple[str, str]:
 def generate_jwt_token(user_id: int, settings: Settings) -> str:
     issued_at = datetime.now(timezone.utc)
     expiration_time = issued_at + timedelta(days=settings.token_lifetime)
-    
+
     claims = {
         "sub": str(user_id),
-        # TODO: JWT Claims
-        # "iss": settings.get_api_identifier(),
-        # "aud": [settings.get_api_identifier()],
         "exp": expiration_time,
         "iat": issued_at
     }

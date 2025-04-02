@@ -1,9 +1,8 @@
 from typing import Optional
 from pydantic import model_validator
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from .base import DbBase, PydanticBase
-from .categories import DbCategory
 
 class InputTask(PydanticBase):
     '''

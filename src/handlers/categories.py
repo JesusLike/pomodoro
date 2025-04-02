@@ -29,28 +29,28 @@ def create_category(categories: CategoriesControllerDep, response: Response, req
     return created
 
 @router.put("/{category_id}", response_model=Category)
-def update_category(categories: CategoriesControllerDep, response: Response, category_id: int, new_category: InputCategory):
+def update_category(categories: CategoriesControllerDep, category_id: int, new_category: InputCategory):
     '''
     Update category
     '''
     return categories.update_category(category_id, new_category)
 
 @router.patch("/{category_id}", response_model=Category)
-def patch_category(categories: CategoriesControllerDep, response: Response, category_id: int, category_props: PatchCategory):
+def patch_category(categories: CategoriesControllerDep, category_id: int, category_props: PatchCategory):
     '''
     Update category properties
     '''
     return categories.patch_category(category_id, category_props)
 
 @router.get("/{category_id}", response_model=Category)
-def get_category(categories: CategoriesControllerDep, response: Response, category_id: int):
+def get_category(categories: CategoriesControllerDep, category_id: int):
     '''
     Retrieve category
     '''
     return categories.get_category(category_id)
 
 @router.delete("/{category_id}")
-def delete_category(categories: CategoriesControllerDep, response: Response, category_id: int):
+def delete_category(categories: CategoriesControllerDep, category_id: int):
     ''' 
     Delete category
     '''

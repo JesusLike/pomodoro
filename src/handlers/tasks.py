@@ -29,28 +29,28 @@ def create_task(tasks: TasksControllerDep, response: Response, request: Request,
     return created
 
 @router.put("/{task_id}", response_model=Task)
-def update_task(tasks: TasksControllerDep, response: Response, task_id: int, new_task: InputTask):
+def update_task(tasks: TasksControllerDep, task_id: int, new_task: InputTask):
     '''
     Update task
     '''
     return tasks.update_task(task_id, new_task)
 
 @router.patch("/{task_id}", response_model=Task)
-def patch_task(tasks: TasksControllerDep, response: Response, task_id: int, task_props: PatchTask):
+def patch_task(tasks: TasksControllerDep, task_id: int, task_props: PatchTask):
     '''
     Update task properties
     '''
     return tasks.patch_task(task_id, task_props)
 
 @router.get("/{task_id}", response_model=Task)
-def get_task(tasks: TasksControllerDep, response: Response, task_id: int):
+def get_task(tasks: TasksControllerDep, task_id: int):
     '''
     Retrieve task
     '''
     return tasks.get_task(task_id)
 
 @router.delete("/{task_id}")
-def delete_task(tasks: TasksControllerDep, response: Response, task_id: int):
+def delete_task(tasks: TasksControllerDep, task_id: int):
     ''' 
     Delete task
     '''
