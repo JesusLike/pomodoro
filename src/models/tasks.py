@@ -44,4 +44,4 @@ class DbTask(DbBase):
     description: Mapped[Optional[str]]
     pomodoro_count: Mapped[int]
     category_id: Mapped[int] = mapped_column(ForeignKey("Categories.id"))
-    user_id: Mapped[int] = mapped_column(ForeignKey("Users.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("Users.id"), server_default='1')
