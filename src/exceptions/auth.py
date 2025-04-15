@@ -12,6 +12,9 @@ class UserNotFoundError(UserInvalidCredentialsError):
 class UserIncorrectPasswordError(UserInvalidCredentialsError):
     pass
 
+class UserExternalSignUp(UserInvalidCredentialsError):
+    pass
+
 class UserInvalidTokenError(AuthenticationError):
     _message = "Access token is invalid or has expired"
 
